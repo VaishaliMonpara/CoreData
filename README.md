@@ -57,4 +57,55 @@ InsertData :
             }
             
  
-   
+ GetData:
+ 
+ 1) We have created function for getData.This function will reuse while search functionality implement or different types     of request in same page.
+ 
+          ///Get Data
+             func getData(request: NSFetchRequest<NSFetchRequestResult>)
+             {
+                 request.returnsObjectsAsFaults = false
+                 arrData = [UserDetail]()
+                 do{
+                     let result = try context!.fetch(request)
+                     for data in result as! [NSManagedObject]{
+                         let userDetail = UserDetail()
+                         userDetail.userName = data.value(forKey: username) as! String
+                         userDetail.mobileNumber = data.value(forKey: mobileNumber) as! String
+                         userDetail.password = data.value(forKey: password) as! String
+                         userDetail.photoUrl = data.value(forKey: photoUrl) as! Data
+                         arrData.append(userDetail)
+                     }
+                 }catch{
+                     print("Failed")
+                 }
+             }
+             
+  2) Call function for getData whenever you call.
+  
+          ///set Request for Get saved all Data
+          let request = NSFetchRequest<NSFetchRequestResult>(entityName: users)
+          getData(request: request)
+          
+          
+ 3) SearchData by username
+ 
+ 
+        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+                 ///Generate Request for FIlter Data
+                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:users)
+                 fetchRequest.predicate = NSPredicate(format: "userName CONTAINS %@", searchText)
+                 fetchRequest.returnsObjectsAsFaults = false
+
+                 if (searchText.count > 0)
+                 {
+                     getData(request: fetchRequest)
+                 }
+                 else
+                 {
+                     let request = NSFetchRequest<NSFetchRequestResult>(entityName: users)
+                     getData(request: request)
+                 }
+         }
+         
+
