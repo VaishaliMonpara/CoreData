@@ -135,5 +135,27 @@ Delete User :
           self.deleteData(request: fetchrequest)
          
 
-Edit User
+Edit User :
+
+1) Below are the code for EditData.Here Username is Unique.So we can find data of that user easily.
+        
+        var newUser = NSManagedObject()
+        let entity = NSEntityDescription.entity(forEntityName: users, in: context!)
          
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: users)
+        request.entity = entity
+        let predict = NSPredicate(format: "userName = %@", userDetail.userName)
+        request.predicate = predict
+
+        do {
+           let result = try context?.fetch(request)
+           if result!.count > 0{
+               newUser = result![0] as! NSManagedObject
+           }else
+           {
+               print("record not found")
+           }
+        }catch{
+           print("error")
+        }
+                
