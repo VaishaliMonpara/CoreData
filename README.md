@@ -27,7 +27,7 @@ An object space that you use to manipulate and track changes to managed objects.
 
          var context: NSManagedObjectContext?
          
-InsertData :
+Insert User :
 
   1) In ViewDidLoad() We need to create a context from this container.
     
@@ -57,9 +57,9 @@ InsertData :
             }
             
  
- GetData:
+ Get User:
  
- 1) We have created function for getData.This function will reuse while search functionality implement or different types     of request in same page.
+ 1) We have created function for getData.This function will reuse while search functionality implement or different         types of request in same page.
  
           ///Get Data
              func getData(request: NSFetchRequest<NSFetchRequestResult>)
@@ -108,4 +108,32 @@ InsertData :
                  }
          }
          
+Delete User :
 
+1) We have created function for DeleteUser.
+
+         func deleteData(request: NSFetchRequest<NSFetchRequestResult>)
+         {
+                 request.returnsObjectsAsFaults = false
+                 arrData = [UserDetail]()
+                 do{
+                     let result = try context!.fetch(request)
+                     for data in result as! [NSManagedObject]{
+                         context?.delete(data)
+                     }
+                     let request = NSFetchRequest<NSFetchRequestResult>(entityName: users)
+                     getData(request: request)
+                 }catch{
+                     print("Failed")
+                 }
+          }
+         
+2) Here I have user tableview so,I have delete data from swipe action on tabeview's row.So i will call this function from tableview's trailingSwipeActionsConfigurationForRowAt() method.
+
+          let fetchrequest = NSFetchRequest<NSFetchRequestResult>(entityName: users)
+          fetchrequest.predicate = NSPredicate(format: "any userName == %@", self.arrData[indexPath.row].userName)
+          self.deleteData(request: fetchrequest)
+         
+
+Edit User
+         
